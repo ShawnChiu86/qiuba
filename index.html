@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秋爸的工具箱 | Qiuba's Toolbox</title>
+    <style>
+        /* --- 基础重置与变量 --- */
+        :root {
+            --primary-color: #2c3e50; /* 深蓝灰 */
+            --accent-color: #e67e22;  /* 秋天的橘色 */
+            --bg-color: #f8f9fa;      /* 浅灰背景 */
+            --card-bg: #ffffff;       /* 卡片白底 */
+            --text-color: #333333;
+            --gray-placeholder: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        /* --- 通用布局容器 --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- 1. 头部介绍区 --- */
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .bio {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        /* --- 2. 联系方式 (二维码占位) --- */
+        .contact-section {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .contact-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+        }
+        /* 二维码容器布局 */
+        .qr-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+        .qr-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* 二维码占位符样式 */
+        .qr-placeholder {
+            width: 150px;
+            height: 150px;
+            background-color: var(--gray-placeholder);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            border: 2px dashed #aaa;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        /* 赞助二维码特殊样式 */
+        .qr-placeholder.sponsor {
+            border-color: #e67e22;
+            background: linear-gradient(45deg, #fef9e7 25%, #fcf3cf 25%, #fcf3cf 50%, #fef9e7 50%, #fef9e7 75%, #fcf3cf 75%, #fcf3cf 100%);
+            background-size: 20px 20px;
+        }
+        /* 小红书二维码特殊样式 */
+        .qr-placeholder.xiaohongshu {
+            border-color: #ff2442;
+            background: linear-gradient(45deg, #ffe6ea 25%, #ffd5dc 25%, #ffd5dc 50%, #ffe6ea 50%, #ffe6ea 75%, #ffd5dc 75%, #ffd5dc 100%);
+            background-size: 20px 20px;
+        }
+        /* 如果你有真图片，给img加上这个class即可 */
+        .qr-img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+        }
+        .qr-label {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+            max-width: 180px;
+        }
+
+        /* --- 3. 项目网格区 --- */
+        .projects-grid {
+            display: grid;
+            /* 响应式布局：最小宽度280px，自动填满一行 */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* 卡片样式 */
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-decoration: none; /* 去掉链接下划线 */
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* 项目图片占位区 */
+        .card-thumb-placeholder {
+            height: 160px;
+            background-color: var(--gray-placeholder);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-weight: bold;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #f3f3f3 25%, #e6e6e6 25%, #e6e6e6 50%, #f3f3f3 50%, #f3f3f3 75%, #e6e6e6 75%, #e6e6e6 100%);
+            background-size: 20px 20px;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .project-desc {
+            font-size: 0.95rem;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        /* 状态标签 (可选) */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            background-color: #eee;
+            color: #666;
+            margin-top: 10px;
+        }
+        .badge.ready { background-color: #d5f5e3; color: #27ae60; }
+        .badge.wip { background-color: #fce5cd; color: #e67e22; }
+
+        /* --- 页脚 --- */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+        }
+
+        footer a { color: #999; }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .qr-container {
+                gap: 30px;
+            }
+            .qr-placeholder {
+                width: 130px;
+                height: 130px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .qr-container {
+                flex-direction: column;
+                gap: 25px;
+            }
+            .qr-placeholder {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>你好，我是秋爸 👋</h1>
+            <p class="bio">
+                热衷于开发实用小工具的开发者。<br>
+                这里汇集了我所有的开源项目，希望能帮到你。
+            </p>
+        </header>
+
+        <section id="contact">
+            <div class="contact-section">
+                <span class="contact-title">联系与支持</span>
+                <div class="qr-container">
+                    <div class="qr-item">
+                        <div class="qr-placeholder">
+                            [ 微信二维码 ]
+                        </div>
+                        <div class="qr-label">
+                            添加联系方式 / 交流反馈<br>
+                            扫描上方二维码或搜索微信号: qiuba_dev
+                        </div>
+                    </div>
+                    <div class="qr-item">
+                        <div class="qr-placeholder xiaohongshu">
+                            [ 小红书二维码 ]
+                        </div>
+                        <div class="qr-label">
+                            关注秋爸的小红书账号<br>
+                            获取更多实用技巧和更新动态
+                        </div>
+                    </div>
+                    <div class="qr-item">
+                        <div class="qr-placeholder sponsor">
+                            [ 赞助二维码 ]
+                        </div>
+                        <div class="qr-label">
+                            如果你觉得我的小工具帮到你了<br>
+                            欢迎扫码打赏支持秋爸
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <h2 style="margin-bottom: 20px; color: var(--primary-color); font-size: 1.5rem;">🛠️ 我的工具箱</h2>
+            
+            <div class="projects-grid">
+                
+                <a href="#" class="project-card">
+                    <div class="card-thumb-placeholder">PROJECT-01</div>
+                    <div class="card-content">
+                        <h3 class="project-title">图片格式转换器</h3>
+                        <p class="project-desc">一个快速将 TIFF/WEBP 转换为 PNG 的小工具，支持批量处理。</p>
+                        <span class="badge ready">已上线</span>
+                    </div>
+                </a>
+
+                <a href="#" class="project-card">
+                    <div class="card-thumb-placeholder">PROJECT-02</div>
+                    <div class="card-content">
+                        <h3 class="project-title">视频生成脚本</h3>
+                        <p class="project-desc">基于 AI 的自动化视频生成流程，解放双手。</p>
+                        <span class="badge wip">开发中</span>
+                    </div>
+                </a>
+
+                <a href="#" class="project-card">
+                    <div class="card-thumb-placeholder">待定席位</div>
+                    <div class="card-content">
+                        <h3 class="project-title">神秘项目 C</h3>
+                        <p class="project-desc">这个位置留给下一个很酷的想法。</p>
+                        <span class="badge">规划中</span>
+                    </div>
+                </a>
+
+                <a href="#" class="project-card">
+                    <div class="card-thumb-placeholder">WAITING</div>
+                    <div class="card-content">
+                        <h3 class="project-title">虚位以待</h3>
+                        <p class="project-desc">更多实用工具正在路上...</p>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 秋爸 (Qiuba). Hosted on GitHub Pages.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
